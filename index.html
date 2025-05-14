@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ヤマト宅急便 料金計算</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 2rem;
+        background: #f9f9f9;
+        max-width: 400px;
+        margin: auto;
+      }
+      h1 {
+        font-size: 1.5rem;
+        text-align: center;
+      }
+      label {
+        margin-top: 1rem;
+        display: block;
+        font-weight: bold;
+      }
+      select,
+      button {
+        width: 100%;
+        padding: 0.5rem;
+        font-size: 1rem;
+        margin-top: 0.5rem;
+      }
+      #result {
+        margin-top: 2rem;
+        font-size: 2rem;
+        font-weight: bold;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>ヤマト宅急便 料金計算</h1>
+
+    <label for="region">配送先地域</label>
+    <select id="region">
+      <option value="北海道">北海道</option>
+      <option value="北東北">北東北（青森・岩手・秋田）</option>
+      <option value="南東北">南東北（宮城・山形・福島）</option>
+      <option value="関東">関東（東京・神奈川・千葉 など）</option>
+      <option value="信越">信越（新潟・長野）</option>
+      <option value="北陸">北陸（富山・石川・福井）</option>
+      <option value="中部">中部（静岡・愛知・三重・岐阜）</option>
+      <option value="関西">関西（大阪・京都・奈良 など）</option>
+      <option value="中国">中国（岡山・広島・山口 など）</option>
+      <option value="四国">四国（徳島・香川・愛媛・高知）</option>
+      <option value="九州">九州（福岡・佐賀・熊本・鹿児島）</option>
+      <option value="沖縄">沖縄</option>
+    </select>
+
+    <label for="size">サイズ</label>
+    <select id="size">
+      <option value="60">60（2kg以内・60cm以内）</option>
+      <option value="80">80（5kg以内・80cm以内）</option>
+      <option value="100">100（10kg以内・100cm以内）</option>
+      <option value="120">120（15kg以内・120cm以内）</option>
+      <option value="140">140（20kg以内・140cm以内）</option>
+      <option value="160">160（25kg以内・160cm以内）</option>
+      <option value="180">180（30kg以内・180cm以内）</option>
+      <option value="200">200（30kg以内・200cm以内）</option>
+      <option value="compact">宅急便コンパクト</option>
+    </select>
+
+    <button onclick="calculate()">計算する</button>
+
+    <div id="result"></div>
+
+    <script>
+      const rates = {
+        北海道: {
+          60: 870,
+          80: 1010,
+          100: 1160,
+          120: 1300,
+          140: 2080,
+          160: 2280,
+          180: 2580,
+          200: 2980,
+          compact: 550,
+        },
+        北東北: {
+          60: 660,
+          80: 800,
+          100: 950,
+          120: 1090,
+          140: 1780,
+          160: 1980,
+          180: 2280,
+          200: 2680,
+          compact: 500,
+        },
+        南東北: {
+          60: 590,
+          80: 730,
+          100: 880,
+          120: 1020,
+          140: 1680,
+          160: 1880,
+          180: 2180,
+          200: 2580,
+          compact: 500,
+        },
+        関東: {
+          60: 590,
+          80: 730,
+          100: 880,
+          120: 1020,
+          140: 1680,
+          160: 1880,
+          180: 2180,
+          200: 2580,
+          compact: 500,
+        },
+        信越: {
+          60: 590,
+          80: 730,
+          100: 880,
+          120: 1020,
+          140: 1680,
+          160: 1880,
+          180: 2180,
+          200: 2580,
+          compact: 500,
+        },
+        北陸: {
+          60: 590,
+          80: 730,
+          100: 880,
+          120: 1020,
+          140: 1680,
+          160: 1880,
+          180: 2180,
+          200: 2580,
+          compact: 500,
+        },
+        中部: {
+          60: 590,
+          80: 730,
+          100: 880,
+          120: 1020,
+          140: 1680,
+          160: 1880,
+          180: 2180,
+          200: 2580,
+          compact: 500,
+        },
+        関西: {
+          60: 660,
+          80: 800,
+          100: 950,
+          120: 1090,
+          140: 1780,
+          160: 1980,
+          180: 2280,
+          200: 2680,
+          compact: 550,
+        },
+        中国: {
+          60: 730,
+          80: 870,
+          100: 1020,
+          120: 1160,
+          140: 1880,
+          160: 2080,
+          180: 2380,
+          200: 2780,
+          compact: 750,
+        },
+        四国: {
+          60: 730,
+          80: 870,
+          100: 1020,
+          120: 1160,
+          140: 1880,
+          160: 2080,
+          180: 2380,
+          200: 2780,
+          compact: 750,
+        },
+        九州: {
+          60: 870,
+          80: 1010,
+          100: 1160,
+          120: 1300,
+          140: 2080,
+          160: 2280,
+          180: 2580,
+          200: 2980,
+          compact: 750,
+        },
+        沖縄: {
+          60: 870,
+          80: 1220,
+          100: 1580,
+          120: 1930,
+          140: 2980,
+          160: 3780,
+          180: 4280,
+          200: 4780,
+          compact: 750,
+        },
+      };
+
+      function calculate() {
+        const region = document.getElementById("region").value;
+        const size = document.getElementById("size").value;
+        const base = rates[region][size];
+        if (base) {
+          const tax = Math.floor(base * 1.1);
+          document.getElementById("result").innerText = `${tax}円`;
+        } else {
+          document.getElementById("result").innerText = "該当なし";
+        }
+      }
+    </script>
+  </body>
+</html>
